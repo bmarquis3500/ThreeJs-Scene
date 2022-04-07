@@ -1,0 +1,158 @@
+<html>
+<head>
+  <title>Project 4</title>
+</head>
+<body>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<div>
+  <input type="range" min="0" max="5" value="0" step="0.1" id="slider" orient="vertical" style="position:relative;">
+<input type="range" min="0" max="5" value="0" step="0.1" id="slider2" orient="vertical" style="position: relative;">
+<input type="range" min="0" max="7" value="0" step="0.01" id="slider3" orient="vertical" style="position: relative;">
+</div>
+<div>
+  <input type="range" min="0" max="10" value="0" step="0.1" id="slider4" orient="vertical" style="position: relative;">
+  <input type="range" min="0.5" max="1" value="0" step=".001" id="slider5" orient="vertical" style="position: relative;">
+  <input type="range" min="5" max="10" value="0" step=".1" id="slider6" orient="vertical" style="position: relative;">
+</div>
+<script type='text/javascript'>
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100);
+camera.position.set(0, 20, 10);
+var scene = new THREE.Scene();
+var light = new THREE.PointLight(0xFFFFFF,1,500);
+var light3 = new THREE.PointLight(0xFF7174,1,0);
+light3.position.set( -50, 5, 0 );
+const light2 = new THREE.AmbientLight( 0x404040 );
+light.position.set(10,0,25);
+scene.add(light);
+scene.add(light2);
+scene.add(light3);
+var renderer = renderer = new THREE.WebGLRenderer({
+  antialias: true
+});
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor("#e5e5e5");
+document.body.appendChild(renderer.domElement);
+var controls = new THREE.OrbitControls(camera, renderer.domElement); 
+window.addEventListener('resize',()=>{
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+})
+
+var slider = document.getElementById("slider");
+slider.addEventListener("input", moveCube);
+var geometry = new THREE.BoxGeometry(1,1,1);
+var cube = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color: 0xFFCC00}))
+cube.position.set(-5,5,0);
+scene.add(cube);
+function moveCube(e){
+  var target = (e.target) ? e.target : e.srcElement;
+  cube.rotation.y = target.value;
+}
+
+var slider2 = document.getElementById("slider2");
+slider2.addEventListener("input", moveCylinder);
+var cylinderGeometry = new THREE.CylinderGeometry(1,1,1,10);
+var cylinder = new THREE.Mesh(cylinderGeometry, new THREE.MeshLambertMaterial({color: 0x254AC}))
+cylinder.position.set(0,5,0);
+scene.add(cylinder);
+function moveCylinder(e){
+  var target = (e.target) ? e.target : e.srcElement;
+  cylinder.rotation.x = target.value;
+}
+
+var slider3 = document.getElementById("slider3");
+slider3.addEventListener("input", moveTorus);
+var torusGeometry = new THREE.TorusGeometry(1,.3,200,500);
+var torus = new THREE.Mesh(torusGeometry, new THREE.MeshLambertMaterial({color: 0xF6B26B}))
+torus.position.set(5,5,0);
+scene.add(torus);
+var q = 0
+function moveTorus(e){
+  var target = (e.target) ? e.target : e.srcElement;
+  q= slider3.value;
+}
+
+var slider4 = document.getElementById("slider4");
+slider4.addEventListener("input", moveSphere);
+var sphereGeometry = new THREE.SphereGeometry(1);
+var material = new THREE.MeshPhongMaterial({color: 0xCC0000})
+var sphere = new THREE.Mesh(sphereGeometry, material)
+sphere.position.set(-5,5,5);
+scene.add(sphere);
+var r = 0;
+function moveSphere(f){
+  var target = (f.target) ? f.target : f.srcElement;
+  r= slider4.value;
+}
+
+var slider5 = document.getElementById("slider5");
+slider5.addEventListener("input", colorKnot);
+var torusKnotGeometry = new THREE.TorusKnotGeometry(.5);
+var material = new THREE.MeshPhongMaterial(new THREE.Color( 0, 0.5, 0 ))
+var torusKnot = new THREE.Mesh(torusKnotGeometry, material)
+torusKnot.position.set(0,5,5);
+scene.add(torusKnot);
+var s = 0.5;
+function colorKnot(g){
+  var target = (g.target) ? g.target : g.srcElement;
+  s= slider5.value;
+}
+
+var slider6 = document.getElementById("slider6");
+slider6.addEventListener("input", scaleDod);
+var dodecahedronGeometry = new THREE.DodecahedronGeometry(1);
+var material = new THREE.MeshPhongMaterial({color: 0x27AE60})
+var dodecahedron = new THREE.Mesh(dodecahedronGeometry, material)
+dodecahedron.position.set(5,5,5);
+scene.add(dodecahedron);
+var t = 5;
+function scaleDod(h){
+  var target = (h.target) ? h.target : h.srcElement;
+  dodecahedron.position.y= target.value;
+}
+
+var brickGeometry = new THREE.BoxGeometry(2,1,1);
+var texture = new THREE.TextureLoader().load( "textures/brick001.jpg" );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+brick = new THREE.Mesh(brickGeometry, material);
+brick.position.set(-5,-5,0);
+scene.add(brick);
+
+var metalBoxGeometry = new THREE.BoxGeometry(1,1,1);
+var texture = new THREE.TextureLoader().load( "textures/metal003.gif" );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+metalBox = new THREE.Mesh(metalBoxGeometry, material);
+metalBox.position.set(5,-5,0);
+scene.add(metalBox);
+
+var globeGeometry = new THREE.SphereGeometry(1);
+var texture = new THREE.TextureLoader().load( "textures/Earth-1024x512.jpg" );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+globe = new THREE.Mesh(globeGeometry, material);
+globe.position.set(5,-5,5);
+scene.add(globe);
+
+var marbleGeometry = new THREE.SphereGeometry(1);
+var texture = new THREE.TextureLoader().load( "textures/marble.jpg" );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+marble = new THREE.Mesh(marbleGeometry, material);
+marble.position.set(-5,-5,5);
+scene.add(marble);
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  const d = new Date();
+  let ms = d.getMilliseconds();
+  torus.rotation.x += .05* q;
+  sphere.position.y = 5+(Math.sin((ms*.001)*Math.PI))*r;
+  torusKnot.material.color = new THREE.Color(0, 0 + s,0)
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>
